@@ -25,18 +25,15 @@
                 @method('post')
 
                 <div class="form-group">
-                    <div class="row">
+                    <div class="row g-3">
                         <div class="col-6">
                             <label class="pb-1" for="name">Name:</label>
                             <input  class="form-control" type="text" name="name" placeholder="Enter Name" value="{{ $user->name }}">
                         </div>
                         <div class="col-6">
                             <label class="pb-1" for="name">Email:</label>
-                            <input  class="form-control" type="email" name="email" placeholder="Enter Email" value="{{ $user->email }}">
+                            <input  class="form-control" type="email" disabled  name="email" placeholder="Enter Email" value="{{ $user->email }}">
                         </div>
-                    </div>
-
-                    <div class="row pt-3">
                         <div class="col-6">
                             <label class="pb-1" for="password">Old Password:</label>
                             <input  class="form-control" type="password" name="password" placeholder="Enter Password">
@@ -45,16 +42,19 @@
                             <label class="pb-1" for="password">New Password:</label>
                             <input  class="form-control"  type="password" name="newPassword" placeholder="Enter Confirm Password">
                         </div>
-                    </div>
-                    <div class="row pt-3">
-                        <div class="col-6"></div>
+                        
                         <div class="col-6">
                             <label class="pb-1" for="password">New Password Confirmation:</label>
                             <input  class="form-control" type="password" name="newPassword_confirmation" placeholder="Enter Password">
                         </div>
+                        
+                        <div class="col-12" style="display: flex; align-content: center;justify-content: center;">.
+                            <input class="btn btn-primary mt-3"  type="submit" value="Update Infor">
+                        </div>
+                         
                     </div>
 
-                    <input class="btn btn-primary mt-3"  type="submit" value="Update Infor">
+                   
                 </div>
                 </form>
 

@@ -14,7 +14,7 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = DB::table('accessories')->join('carts', 'carts.accessory_id', 'accessories.id')
-            ->select('accessories.name', 'accessories.price', 'accessories.image', 'carts.*')
+            ->select('accessories.name', 'accessories.price', 'carts.*')
             ->where('carts.customer_id', session()->get('id'))->get();
         // $carts = DB::table('carts')->where('carts.customer_id', session()->get('id'))->get();
         return view('clients.cart', compact('cartItems'));

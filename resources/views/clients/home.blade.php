@@ -29,7 +29,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="slide-item-img"><img src="{{asset('clients_assets/images/product8.png')}}slider/41-1.png" alt="#"><span class="call-to-circle-1"></span></div> -->
                   </div>
                 </div>
               </div>
@@ -58,7 +57,6 @@
                           </div>
                         </div>
                       </div>
-                      <!-- <div class="slide-item-img"><img src="{{asset('clients_assets/images/product8.png')}}slider/41-1.png" alt="#"><span class="call-to-circle-1"></span></div> -->
                     </div>
                   </div>
                 </div>
@@ -136,8 +134,12 @@
                   <div class="col-12">
                     <div class="ltn__product-item ltn__product-item-4">
                       <div class="product-img">
-                        <a href="product-details.html">
-                          <img src="{{ asset('images/product/' .  $item->image) }}" style="height:374px" alt="#">
+                        <a href="{{URL::to('single/accessory/'.$item->id)}}">
+                          @php
+                              $images = \App\Models\Images::all()->where('product_id','=',$item->id)->toArray();
+                              $images= array_values($images);
+                          @endphp
+                          <img src="{{ asset('images/product/' .  $images[0]['name']) }}" style="height:374px ; width:288px; object-fit:cover" alt="#">
                         </a>
                         <div class="product-badge">
                           <ul>
@@ -219,8 +221,12 @@
                   <div class="col-12">
                     <div class="ltn__product-item ltn__product-item-4">
                       <div class="product-img">
-                        <a href="product-details.html">
-                          <img src="{{ asset('images/product/' .  $item->image) }}" style="height:374px" alt="#">
+                        <a href="{{URL::to('single/accessory/'.$item->id)}}">
+                          @php
+                             $images = \App\Models\Images::all()->where('product_id','=',$item->id)->toArray();
+                              $images= array_values($images);
+                          @endphp
+                          <img src="{{ asset('images/product/' .  $images[0]['name']) }}" style="height:374px ; width:288px; object-fit:cover" alt="#">
                         </a>
                         <div class="product-badge">
                           <ul>
@@ -300,8 +306,12 @@
                   <div class="col-12">
                     <div class="ltn__product-item ltn__product-item-4">
                       <div class="product-img">
-                        <a href="product-details.html">
-                          <img src="{{ asset('images/product/' .  $item->image) }}" style="height:374px" alt="#">
+                        <a href="{{URL::to('single/accessory/'.$item->id)}}">
+                          @php
+                              $images = \App\Models\Images::all()->where('product_id','=',$item->id)->toArray();
+                              $images= array_values($images);
+                          @endphp
+                          <img src="{{ asset('images/product/' .  $images[0]['name']) }}" style="height:374px ; width:288px; object-fit:cover" alt="#">
                         </a>
                         <div class="product-badge">
                           <ul>
@@ -422,9 +432,17 @@
       <div class="col-12">
         <div class="ltn__product-item ltn__product-item-4">
           <div class="product-img">
-            <a href="product-details.html">
-              <img src="{{ asset('images/product/' .  $item->image) }}" style="height:374px" alt="#">
-            </a>
+            <a href="{{URL::to('single/accessory/'.$item->id)}}">
+                          @php
+                              $images = \App\Models\Images::all()->where('product_id','=',$item->id)->toArray();
+                              $images= array_values($images);
+                              // print_r( $images);
+                              // reset($images);
+                              // echo $images[0];
+                              
+                          @endphp
+                         <img src="{{ asset('images/product/' .  $images[0]['name']) }}" style="height:374px ; width:288px; object-fit:cover" alt="#">
+                        </a>
             <div class="product-badge">
               <ul>
                 <li class="badge-2">10%</li>

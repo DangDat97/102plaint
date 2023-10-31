@@ -10,6 +10,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Termwind\Components\Dd;
+use App\Models\Images;
 
 class Accessories extends Controller
 {
@@ -19,17 +20,13 @@ class Accessories extends Controller
     {
 
         $tile = 'Accessories';
-        $types = Type::all();
+        $types = Category::all();
         $query = Accessory::query();
         if (isset($request->title) && ($request->title != null)) {
-            $query->where('name', 'like',  '%' . $request->title . '%');
+            $query->where('name', 'like', '%' . $request->title . '%');
         }
-
-
         if (isset($request->type) && ($request->type != null)) {
-            $query->whereHas('type', function ($q) use ($request) {
-                $q->whereIn('id', $request->type);
-            });
+            $query->where('type_id', '=', $request->type);
         }
         if (isset($request->min) && ($request->min != null)) {
             $query->where('price', '>=', $request->min);
@@ -37,9 +34,42 @@ class Accessories extends Controller
         if (isset($request->max) && ($request->max != null)) {
             $query->where('price', '<=', $request->max);
         }
-        $accessories = $query->get();
+        // $accessories = $query->get();
+        $accessories = $query->paginate(7);
         return view('admins.accessory.index', compact('accessories', 'types', 'tile'));
     }
+
+    public function storeAccessories(Request $request)
+    {
+
+        $accessory = new Accessory;
+        $request->validate([
+            'name' => 'string|required|',
+            'use' => 'string|required|',
+            'price' => 'required|',
+            'type_id' => 'int|required|',
+            'image.*' => 'required|image|mimes:jpeg,jpg,png,gif,svg|max:5120',
+        ]);
+
+        $accessory->name = $request->input('name');
+        $accessory->price = $request->input('price');
+        $accessory->use = $request->input('use');
+        $accessory->type_id = $request->input('type_id');
+        $accessory->description = $request->input('description');
+        $accessory->save();
+        foreach ($request->image as $value) {
+            $Images = new Images;
+            $Images['name'] = time() . '.' . $value->getClientOriginalName();
+            $value->move(public_path('/images/product/'), $Images['name']);
+            $Images['product_id'] = $accessory->id;
+            $Images->save();
+            $imageNams[] = $Images['name'];
+        }
+
+        return redirect()->back()->withSuccess('You have successfully upload image.')->with('image', $imageNams);
+    }
+
+
     public function updateAccessories(Accessory $accessory, Request $request)
     {
         // return $request;
@@ -48,29 +78,46 @@ class Accessories extends Controller
             'name' => 'string|required|',
             'use' => 'string|required|',
             'price' => 'required|',
-
-            'type_id' => 'int|required|'
+            'type_id' => 'int|required|',
+            'image.*' => 'required|image|mimes:jpeg,jpg,png,gif,svg|max:5120',
         ]);
+        $accessory->name = $request->input('name');
+        $accessory->price = $request->input('price');
+        $accessory->use = $request->input('use');
+        $accessory->type_id = $request->input('type_id');
+        $accessory->description = $request->input('description');
 
+        $Images = Images::all()->where('product_id', '=', $accessory->id);
+        foreach ($Images as $value) {
+            $value->delete();
+        }
 
-
-        $image = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('/images/product/'), $image);
-        $accessory->image = $image;
+        foreach ($request->image as $value) {
+            $Images = new Images;
+            $Images['name'] = time() . '.' . $value->getClientOriginalName();
+            $value->move(public_path('/images/product/'), $Images['name']);
+            $Images['product_id'] = $accessory->id;
+            $Images->save();
+            $imageNams[] = $Images['name'];
+        }
 
         if ($accessory->save()) {
-            return redirect(route('adminAccessories'));
+            return redirect()->back()->withSuccess('You have successfully update assessories.')->with('image', $imageNams);
         }
     }
+
     public function editAccessories(Accessory $accessory)
     {
-        return view('admins.accessory.editAccessories', ['accessory' => $accessory]);
+        $category  = Category::all();
+        return view('admins.accessory.editAccessories', compact('accessory', 'category'));
     }
+
     public function deleteAccessories(Accessory $accessory)
     {
         $accessory->delete();
         return redirect(route('adminAccessories'));
     }
+
     public function userAccessory(Request $request)
     {
         $types = Category::all();
@@ -89,11 +136,11 @@ class Accessories extends Controller
             $query->where('price', '<=', $request->max);
         }
         $accessories = $query->paginate(7);
-        $counts= Accessory::count();
+        $counts = Accessory::count();
         return view('clients.shop', compact('accessories', 'types', 'counts'));
     }
 
-   
+
 
     public function singleAccessory($id)
     {
@@ -122,29 +169,5 @@ class Accessories extends Controller
 
         $category = Category::all();
         return view('admins.accessory.createAccessories', compact('category'));
-    }
-
-
-    public function storeAccessories(Request $request)
-    {
-        $accessory = new Accessory;
-        $request->validate([
-            'name' => 'string|required|',
-            'use' => 'string|required|',
-            'price' => 'required|',
-            'type_id' => 'int|required|'
-        ]);
-
-        $accessory->name = $request->input('name');
-
-        $accessory->price = $request->input('price');
-        $accessory->use = $request->input('use');
-        $accessory->type_id = $request->input('type_id');
-        $image = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('/images/product/'), $image);
-        $accessory->image = $image;
-
-        $accessory->save();
-        return redirect(route('adminAccessories'));
     }
 }

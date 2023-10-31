@@ -15,6 +15,7 @@ class Accessory extends Model
         'price',
         'image',
         'type_id',
+        'description',
     ];
     public function type()
     {

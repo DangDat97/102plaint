@@ -17,24 +17,24 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $title='Dashboard';
-        $say='Hello Admin ! Good Luck';
-        $totalBill=0;
-        $orders= DB::table('orders')->get();
-        $totalUser= DB::table('users')->count();
-        $totalProduct= DB::table('accessories')->count();
-        foreach($orders as $order){
-            $totalBill+= $order->bill;
+        $title = 'Dashboard';
+        $say = 'Hello Admin ! Good Luck';
+        $totalBill = 0;
+        $orders = DB::table('orders')->get();
+        $totalUser = DB::table('users')->count();
+        $totalProduct = DB::table('accessories')->count();
+        foreach ($orders as $order) {
+            $totalBill += $order->bill;
         };
 
-        return view('admins.dashboard',compact('totalBill','title','say','totalUser','totalProduct'));
+        return view('admins.dashboard', compact('totalBill', 'title', 'say', 'totalUser', 'totalProduct'));
     }
 
     public function users()
     {
         $userCount = DB::table('users')->where('role', '!=', 1)->count();
         // $users = User::where('role', '!=', 1)->get();
-        $users = User::all();
+        $users = User::paginate(10);
         return view('admins.account', compact(['users', 'userCount']));
     }
 
@@ -115,8 +115,7 @@ class AdminController extends Controller
         $category = new Category;
         $category->name = $request->name;
         $category->save();
-        return redirect()->back()->with('success','Add Category Success');
-
+        return redirect()->back()->with('success', 'Add Category Success');
     }
     public function createCategory()
     {
@@ -141,12 +140,14 @@ class AdminController extends Controller
         return redirect(route('superAdminCatgegries'));
     }
 
-    public function accountAdmin(){
-        $user= User::find(session()->get('id'));
-        return view('admins.accountAdmin',compact('user'));
+    public function accountAdmin()
+    {
+        $user = User::find(session()->get('id'));
+        return view('admins.accountAdmin', compact('user'));
     }
 
-    public function updateAccountAdmin(Request $request){
+    public function updateAccountAdmin(Request $request)
+    {
         // $request->validate([
         //     'name' => 'string|required|min:2',
         //     'email' => 'string|email|max:100',
@@ -154,20 +155,17 @@ class AdminController extends Controller
         //     'newPassword' => 'string|required|confirmed|min:6',
         //     'newPassword_confirmation' => 'string|required|confirmed|min:6'
         // ]);
-        $user= User::find(session()->get('id'));
+        $user = User::find(session()->get('id'));
         $user->name = $request->input('name');
         $user->email = $request->input('email');
 
 
-        if(Hash::check($request->input('password'), $user->password)){
-            $user->password=Hash::make($request->input('newPassword'));
+        if (Hash::check($request->input('password'), $user->password)) {
+            $user->password = Hash::make($request->input('newPassword'));
             $user->save();
-            return redirect()->back()->with('success','Updatae Infor Success');
-
-
-        } else{
-            return redirect()->back()->with('errors','Incorrect passsword');
-
+            return redirect()->back()->with('success', 'Updatae Infor Success');
+        } else {
+            return redirect()->back()->with('errors', 'Incorrect passsword');
         }
     }
 

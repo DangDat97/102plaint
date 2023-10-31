@@ -18691,7 +18691,7 @@ body {
 }
 .page-header .page-header-content .page-header-title {
   line-height: normal;
-  font-size: 2.25rem;
+  font-size: 1.25rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -19618,3 +19618,35 @@ pre[class*=language-] {
 .token.variable {
   color: #ff6666;
 }
+.w-5{
+  display: none;
+}
+ .page-item.active .page-link{
+        z-index: 3;
+        color: #fff !important  ;
+        background-color: #0061f2 !important;
+        border-color: #0061f2 !important;
+        border-radius: 5%;
+        padding: 6px 12px;
+    }
+    .page-link{
+        z-index: 3;
+        color: #0061f2 !important;
+        background-color: #fff;
+        border-color: #007bff;
+        border-radius: 5%;
+        padding: 6px 12px !important;
+    }
+    .page-item:first-child .page-link{
+        border-radius: 5% !important;
+    }
+    .page-item:last-child .page-link{
+        border-radius: 5% !important;   
+    }
+    .pagination li{
+        padding: 3px;
+    }
+    .disabled .page-link{
+        color: #212529 !important;
+        opacity: 0.5 !important;
+    }

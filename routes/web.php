@@ -9,7 +9,7 @@ use App\Http\Controllers\ClientsCotroller;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Accessories;
 use App\Http\Controllers\WatchListController;
-
+use App\Http\Controllers\ImageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,8 +39,8 @@ Route::get('/login', [AuthController::class, 'loadLogin']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout']);
 
-
-
+Route::get('/updateImages', [ImageController::class, 'index'])->name('UImages');
+Route::post('/updateImages', [ImageController::class, 'imageUpload'])->name('image.store');
 
 
 

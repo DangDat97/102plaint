@@ -8,7 +8,7 @@
             <div class="card mb-4">
                 <div class="card-header">Account List</div>
                 <div class="card-body">
-                    <a href="{{ route('createUsers') }}">Add Users</a>
+                    <a class="btn btn-primary mb-3" href="{{ route('createUsers') }}">Add Users</a>
                     <h4>Total User:{{$userCount}}</h4>
                     <table class="table">
                         <tr>
@@ -43,6 +43,12 @@
                             </tr>
                         @endforeach
                     </table>
+                    <div class="row">
+                                <div class="col-sm-12 col-md-12" style="display: flex; justify-content: end">
+                                    {{$users->links('admins.custom')}}
+                                </div>
+                            </div>
+
                 </div>
             </div>
         </div>

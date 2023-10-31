@@ -110,12 +110,21 @@
                       <li>
                         <a href="{{route('contact-us')}}">Contact Us</a>
                       </li>
+                       @if( session()->has('id'))
                       <li>
-                        <a href="{{route('login')}}">Login</a>
+                          <a href="{{route('wishlist')}}">Wishlist</a>
                       </li>
                       <li>
-                        <a href="{{route('register')}}">Create Account</a>
+                          <a href="{{route('viewCart')}}">Cart</a>
                       </li>
+                    @else
+                      <li>
+                          <a href="{{route('login')}}">Login</a>
+                      </li>
+                      <li>
+                          <a href="{{route('register')}}">Create Account</a>
+                      </li>
+                    @endif
                     </ul>
                   </div>
                 </nav>
@@ -134,8 +143,8 @@
                         </div>
                       </div>
                       <div class="header-search-1-form">
-                        <form id="#234" method="get" action="#">
-                          <input type="text" name="search" value="" placeholder="Search here..." />
+                        <form action="{{ route('Accessories') }}">
+                          <input type="text" name="title" value="" placeholder="Search here..." />
                           <button type="submit">
                             <span>
                               <i class="icon-magnifier"></i>
@@ -194,7 +203,7 @@
                     <!-- mini-cart 2 -->
                     @php
                     $cart = \Illuminate\Support\Facades\DB::table('accessories')->join('carts', 'carts.accessory_id', 'accessories.id')
-                    ->select('accessories.name', 'accessories.price', 'accessories.image', 'carts.*')
+                    ->select('accessories.name', 'accessories.price', 'carts.*')
                     ->where('carts.customer_id', session()->get('id'))->get();
                     $totalCart= $cart->count();
                     $total=0;
@@ -247,25 +256,31 @@
           @if (session()->has('id'))
           
           @if ($cart!=null)
-          @foreach ( $cart as $item)
+          @foreach ( $cart as $itemH)
           <div class="mini-cart-item clearfix">
             <div class="mini-cart-img">
-              <a href="{{URL::to('single/accessory/'.$item->accessory_id)}}">
-                <img style="max-width: 60px; height: 60px" src="{{ asset('images/product/' .  $item->image) }}" alt="Image">
+              
+              <a href="{{URL::to('single/accessory/'.$itemH->accessory_id)}}">
+                @php
+                    $imagesHead = \App\Models\Images::all()->where('product_id','=',$itemH->accessory_id)->toArray();
+                    $imagesHead= array_values($imagesHead);
+                @endphp
+                <img style="max-width: 60px; height: 60px" src="{{ asset('images/product/' .  $imagesHead[0]['name']) }}" alt="Image">
+
               </a>
               <span class="mini-cart-item-delete">
-                <a href="{{URL::to('deleteCartItem/'.$item->id)}}"><i class="icon-trash"></i></a>
+                <a href="{{URL::to('deleteCartItem/'.$itemH->id)}}"><i class="icon-trash"></i></a>
               </span>
             </div>
             <div class="mini-cart-info">
               <h6>
-                <a href="{{URL::to('single/accessory/'.$item->accessory_id)}}">{{substr($item->name,0,30)}}</a>
+                <a href="{{URL::to('single/accessory/'.$itemH->accessory_id)}}">{{substr($itemH->name,0,30)}}</a>
               </h6>
-              <span class="mini-cart-quantity">{{$item->quanity. ' x $'. $item->price}}</span>
+              <span class="mini-cart-quantity">{{$itemH->quanity. ' x $'. $itemH->price}}</span>
             </div>
           </div>
           @php
-          $total+=$item->quanity*$item->price;
+          $total+=$itemH->quanity*$itemH->price;
           @endphp
           @endforeach
           @else

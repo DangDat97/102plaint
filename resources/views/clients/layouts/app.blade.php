@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{{asset('clients_assets/css/style.css')}}">
     <!-- Responsive css -->
     <link rel="stylesheet" href="{{asset('clients_assets/css/responsive.css')}}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
 </head>
   <body>
     <!--[if lte IE 9]>

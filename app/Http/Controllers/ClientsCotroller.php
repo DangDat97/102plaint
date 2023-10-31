@@ -16,8 +16,8 @@ class ClientsCotroller extends Controller
 {
     public function index()
     {
-        $accessories=Accessory::all();
-        return view('clients.home' ,compact('accessories'));
+        $accessories = Accessory::all();
+        return view('clients.home', compact('accessories'));
     }
 
     public function cart()
@@ -52,14 +52,14 @@ class ClientsCotroller extends Controller
     public function wishlist()
     {
         $cartItems = DB::table('accessories')->join('watch_lists', 'watch_lists.accessory_id', 'accessories.id')
-            ->select('accessories.name', 'accessories.price', 'accessories.image', 'watch_lists.*')
+            ->select('accessories.name', 'accessories.price',  'watch_lists.*')
             ->where('watch_lists.customer_id', Auth::user()->id)->get();
         return view('clients.wishlist', compact('cartItems'));
     }
     public function checkout()
     {
         $carts = DB::table('accessories')->join('carts', 'carts.accessory_id', 'accessories.id')
-            ->select('accessories.name', 'accessories.price', 'accessories.image', 'carts.*')
+            ->select('accessories.name', 'accessories.price', 'carts.*')
             ->where('carts.customer_id', Auth::user()->id)->get();
         $total = 0;
         $count = 0;

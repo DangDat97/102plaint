@@ -90,7 +90,7 @@ class AuthController extends Controller
             // $carts = DB::table('carts')->where('carts.customer_id', Auth::user()->id)->get();
 
             $carts = DB::table('accessories')->join('carts', 'carts.accessory_id', 'accessories.id')
-                ->select('accessories.name', 'accessories.price', 'accessories.image', 'carts.*')
+                ->select('accessories.name', 'accessories.price', 'carts.*')
                 ->where('carts.customer_id', Auth::user()->id)->get();
             session()->put('cart', $carts);
             $total = 0;

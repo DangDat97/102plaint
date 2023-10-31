@@ -50,7 +50,14 @@
                                 <tr>
                                     <td class="cart-product-remove"><a href="{{URL::to('deleteCartItem/'.$cartItem->id)}}">x</a></td>
                                     <td class="cart-product-image">
-                                        <a href="{{URL::to('single/accessory/'.$cartItem->accessory_id)}}"><img src="{{ asset('images/product/' .  $cartItem->image) }}" alt="#"></a>
+                                        <a href="{{URL::to('single/accessory/'.$cartItem->accessory_id)}}">
+                                            @php
+                                                    $images = \App\Models\Images::all()->where('product_id','=',$cartItem->accessory_id)->toArray();
+                                                    $images= array_values($images);
+                                                @endphp
+                                            <img src="{{ asset('images/product/' .  $images[0]['name']) }}" alt="#">
+                                        
+                                        </a>
                                     </td>
                                     <td class="cart-product-info">
                                         <h4><a href="{{URL::to('single/accessory/'.$cartItem->accessory_id)}}" style="width= 50px">{{substr($cartItem->name,0,30)}}</a></h4>

@@ -24,28 +24,38 @@
 <div class="ltn__shop-details-area pb-70">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-9 col-md-9">
                 <div class="ltn__shop-details-inner">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="ltn__shop-details-img-gallery ltn__shop-details-img-gallery-2">
                                 <div class="ltn__shop-details-small-img slick-arrow-2">
-                                    <div class="single-small-img">
-                                        <img src="
-                                        {{ asset('images/product/' .  $accessory->image) }}
-                                        " alt="Image">
-                                    </div>
+                                     @php
+                                        $images = \App\Models\Images::all()->where('product_id','=',$accessory->id);
+                                    @endphp
+                                    @foreach ($images as $image)
+                                        <div class="single-small-img">
+                                           <img src="{{ asset('images/product/'.$image->name)}}" style="width: 90px ; height: 75px ;object-fit: cover" alt="">
+                                        </div>
+                                    @endforeach
+                                    
                                 </div>
+                                
                                 <div class="ltn__shop-details-large-img">
                                     <div class="single-large-img">
-                                        <a href="{{ asset('images/product/' .  $accessory->image) }}" data-rel="lightcase:myCollection">
-                                            <img src="{{ asset('images/product/' .  $accessory->image) }} "alt="Image">
+                                        <a href="{{URL::to('single/accessory/'.$accessory->id)}}" data-rel="lightcase:myCollection">
+                                             @php
+                                                $images = \App\Models\Images::all()->where('product_id','=',$accessory->id)->toArray();
+                                                $images= array_values($images);
+                                            @endphp
+                                            <img src="{{ asset('images/product/' . $images[0]['name']) }} " style="height: 270px; width:100% ; object-fit: cover;"  alt="Image">
                                         </a>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="modal-product-info shop-details-info pl-0">
                                 <h3>{{  substr($accessory->name,0,20)  }}</h3>
                                 <div class="product-price-ratting mb-20">
@@ -144,6 +154,65 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3 col-md-3">
+                <aside class="sidebar-area blog-sidebar ltn__right-sidebar">
+                        <!-- Popular Post Widget -->
+                        <div class="widget ltn__popular-post-widget">
+                            <h4 class="ltn__widget-title">Maybe you like</h4>
+                            <ul>
+                                 @php
+                                        $products = \App\Models\Accessory::all()->where('type_id','=',$accessory->type_id)->skip(0)->take(5);
+                                    @endphp
+                                    @foreach ($products as $product)
+                                <li>
+                                    <div class="popular-post-widget-item clearfix">
+                                        <div class="popular-post-widget-img">
+                                            <a href="{{URL::to('single/accessory/'.$product->id)}}">
+                                                @php
+                                                $images = \App\Models\Images::all()->where('product_id','=',$product->id)->skip(0)->take(5)->toArray();
+                                                $images= array_values($images);
+                                                @endphp
+                                                <img src="{{ asset('images/product/'.$images[0]['name'])}}" style="width: 90px ; height: 60px ;object-fit: cover" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="popular-post-widget-brief">
+                                            {{-- <div class="ltn__blog-meta">
+                                                <ul>
+                                                    <li class="ltn__blog-author d-none">
+                                                        <a href="#">by: Admin</a>
+                                                    </li>
+                                                    <li>
+                                                        <span> Nov 18, 2020</span>
+                                                    </li>
+                                                    <li class="ltn__blog-comment">
+                                                        <a href="#"><i class="icon-speech"></i> 2</a>
+                                                    </li>
+                                                </ul>
+                                            </div> --}}
+                                            <h6 class="ltn__blog-title blog-title-line"><a href="{{URL::to('single/accessory/'.$product->id)}}">{{$product->name}}</a></h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="widget ltn__menu-widget">
+                            <h4 class="ltn__widget-title">Categories</h4>
+                            <ul>
+                                @php
+                                $Categories = \App\Models\Category::all();
+                                
+                                @endphp
+                                @foreach ($Categories as $Category)
+                                <li>
+                                    <a href=" {{ route('Accessories').'?type='.$Category->id
+                                    }}">{{ $Category->name }}</a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </aside>
+            </div>
         </div>
     </div>
 </div>
@@ -167,7 +236,7 @@
                     <div class="tab-content">
                         <div class="tab-pane fade active show" id="liton_tab_details_1_1">
                             <div class="ltn__shop-details-tab-content-inner text-center">
-                                <p>{{$accessory->use}}</p>
+                                <p>{{$accessory->description}}</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="liton_tab_details_1_2">
@@ -399,7 +468,15 @@
             <div class="col-12">
                 <div class="ltn__product-item ltn__product-item-4">
                     <div class="product-img">
-                        <a href=""><img src="{{ asset('images/product/' .  $access->image) }}" style="max-width: 263px ; height: 342px" alt="#"></a>
+                        <a href="{{URL::to('single/accessory/'.$access->id)}}">
+                            @php
+                                $images = \App\Models\Images::all()->where('product_id','=',$access->id)->toArray();
+                                $images= array_values($images);
+                            @endphp
+                            <img src="{{ asset('images/product/' .  $images[0]['name']) }} " style="width: 100%; height: 341px; object-fit: cover" alt="#">
+
+                        </a>
+
                         <div class="product-badge">
                             <ul>
                                 <li class="badge-2">10%</li>
@@ -435,10 +512,9 @@
                                 <li><a href="#"><i class="icon-star"></i></a></li>
                             </ul>
                         </div>
-                        <h2 class="product-title"><a href="product-details.html">Pink Flower Tree</a></h2>
+                        <h2 class="product-title"><a href="product-details.html">{{$access->name}}</a></h2>
                         <div class="product-price">
-                            <span>$18.00</span>
-                            <del>$21.00</del>
+                            <span>${{$access->price}}</span>
                         </div>
                     </div>
                 </div>
